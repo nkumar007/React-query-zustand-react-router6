@@ -3,14 +3,34 @@ import axios from "axios";
 import { useRef } from "react";
 import { Todo } from "./hooks/useTodos";
 
+interface AddTodoContext {
+  previousTodos: Todo[];
+}
+
 const TodoForm = () => {
   const queryClient = useQueryClient();
-  const addTodo = useMutation({
+  const addTodo = useMutation<Todo, Error, Todo, AddTodoContext>({
     mutationFn: (todo: Todo) =>
       axios
-        .post<Todo>("https://jsonplaceholder.typicode.com/todos", todo)
+        .post<Todo>("https://jsonplaceholder.tyxpicode.com/todos", todo)
         .then((res) => res.data),
+
+    onMutate: (newTodo: Todo) => {
+      const previousTodos = queryClient.getQueryData<Todo[]>(["todos"]) || [];
+      queryClient.setQueryData<Todo[]>(["todos"], (todos) => [
+        newTodo,
+        ...(todos || []),
+      ]);
+
+      if (ref.current) ref.current.value = "";
+
+      return { previousTodos };
+    },
+
     onSuccess: (savedTodo, newTodo) => {
+      queryClient.setQueryData<Todo[]>(["todos"], (todos) =>
+        todos?.map((todo) => (todo === newTodo ? savedTodo : todo))
+      );
       // Two ways to update data
       //Approach One: Invalidating the Cache
       // queryClient.invalidateQueries({
@@ -18,38 +38,46 @@ const TodoForm = () => {
       // })
 
       //Approach Two: Update Query data
+    },
+    onError: (error, newTodo, context) => {
+      if (!context) return;
 
-      queryClient.setQueryData<Todo[]>(["todos"], (todos) => [
-        savedTodo,
-        ...(todos || []),
-      ]);
+      queryClient.setQueryData<Todo[]>(["todos"], context.previousTodos);
     },
   });
+
   const ref = useRef<HTMLInputElement>(null);
 
   return (
-    <form
-      className="row mb-3"
-      onSubmit={(event) => {
-        event.preventDefault();
+    <>
+      {addTodo.error && (
+        <div className="alert alert-danger">{addTodo.error.message}</div>
+      )}
+      <form
+        className="row mb-3"
+        onSubmit={(event) => {
+          event.preventDefault();
 
-        if (ref.current && ref.current.value) {
-          addTodo.mutate({
-            id: 0,
-            title: ref.current?.value,
-            completed: false,
-            userId: 0,
-          });
-        }
-      }}
-    >
-      <div className="col">
-        <input ref={ref} type="text" className="form-control" />
-      </div>
-      <div className="col">
-        <button className="btn btn-primary">Add</button>
-      </div>
-    </form>
+          if (ref.current && ref.current.value) {
+            addTodo.mutate({
+              id: 0,
+              title: ref.current?.value,
+              completed: false,
+              userId: 0,
+            });
+          }
+        }}
+      >
+        <div className="col">
+          <input ref={ref} type="text" className="form-control" />
+        </div>
+        <div className="col">
+          <button className="btn btn-primary">
+            {addTodo.isLoading ? "Adding..." : "Add"}
+          </button>
+        </div>
+      </form>
+    </>
   );
 };
 
