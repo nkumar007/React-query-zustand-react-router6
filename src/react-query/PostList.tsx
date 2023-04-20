@@ -4,10 +4,9 @@ import usePosts from "./hooks/usePosts";
 const PostList = () => {
   // const [userId, setUserId] = useState<number>();
   const pageSize = 10;
-  const [page, setPage] = useState(1);
-  const { data: posts, error, isLoading } = usePosts({ page, pageSize });
-
-  console.log(posts);
+  // const [page, setPage] = useState(1);
+  const { data, error, isLoading, fetchNextPage, isFetchingNextPage } =
+    usePosts({ pageSize });
 
   if (isLoading) return <p>Loading....</p>;
 
@@ -26,24 +25,25 @@ const PostList = () => {
         <option value="3">User 3</option>
       </select> */}
       <ul className="list-group mb-3">
-        {posts?.map((post) => (
-          <li key={post.id} className="list-group-item">
-            {post.title}
-          </li>
+        {data.pages.map((page) => (
+          <>
+            {page.map((post, index) => (
+              <li key={index} className="list-group-item">
+                {post.title}
+              </li>
+            ))}
+          </>
         ))}
       </ul>
-      <button
+      {/* <button
         disabled={page === 1}
         className="btn btn-primary"
         onClick={() => setPage(page - 1)}
       >
         Previous
-      </button>
-      <button
-        onClick={() => setPage(page + 1)}
-        className="btn btn-primary ms-1"
-      >
-        Next
+      </button> */}
+      <button onClick={() => fetchNextPage()} className="btn btn-primary ms-1">
+        {isFetchingNextPage ? "Loading..." : "Load More"}
       </button>
     </>
   );
