@@ -1,19 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
 import { CACHE_KEY } from "../constants";
-import APIClient from "../services/apiClient";
-
-export interface Todo {
-  id: number;
-  title: string;
-  userId: number;
-  completed: boolean;
-}
+import todoService, { Todo } from "../services/todoService";
 
 const useTodos = () => {
-  const apiClient = new APIClient<Todo>("/todos");
   return useQuery<Todo[], Error>({
     queryKey: CACHE_KEY,
-    queryFn: apiClient.getAll,
+    queryFn: todoService.getAll,
     staleTime: 10 * 1000, // 10s
   });
 };
