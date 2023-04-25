@@ -1,8 +1,10 @@
 import { useContext } from "react";
+import useAuthStore from "../auth/store";
 import TasksContext from "./tasksContext";
 
 const TaskList = () => {
   const { tasks, dispatch } = useContext(TasksContext);
+  const { user } = useAuthStore();
 
   return (
     <>
@@ -10,7 +12,7 @@ const TaskList = () => {
         onClick={() =>
           dispatch({
             type: "ADD",
-            task: { id: Date.now(), title: "Task" + Date.now() },
+            task: { id: Date.now(), title: `${user}` },
           })
         }
         className="btn btn-primary my-3"
