@@ -1,5 +1,5 @@
 import { useReducer } from "react";
-import counterReducer from "./reducers/countReducer";
+import counterReducer from "./countReducer";
 
 const Counter = () => {
   const [value, dispatch] = useReducer(counterReducer, 0);
