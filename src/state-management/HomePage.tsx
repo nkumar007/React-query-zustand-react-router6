@@ -1,7 +1,8 @@
+import LoginStatus from "./LoginStatus";
 import TaskList from "./TaskList";
 
 const HomePage = () => {
-  return <TaskList />;
+  return <LoginStatus />;
 };
 
 export default HomePage;

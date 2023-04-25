@@ -7,7 +7,7 @@ const NavBar = () => {
 
   return (
     <nav className="navbar d-flex justify-content-between">
-      <span className="badge text-bg-secondary">{tasks.length}</span>
+      <span className="badge text-bg-secondary">6</span>
       <LoginStatus />
     </nav>
   );
