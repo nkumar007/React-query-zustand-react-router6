@@ -1,6 +1,7 @@
 import { createBrowserRouter } from "react-router-dom";
 import ContactPage from "./ContactPage";
 import HomePage from "./HomePage";
+import UserDetailPage from "./UserDetailPage";
 import UserListPage from "./UserListPage";
 
 const router = createBrowserRouter([
@@ -15,6 +16,10 @@ const router = createBrowserRouter([
   {
     path: "/contact",
     element: <ContactPage />,
+  },
+  {
+    path: "/users/:id",
+    element: <UserDetailPage />,
   },
 ]);
 
