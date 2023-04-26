@@ -7,9 +7,9 @@ const NavBar = () => {
       style={{ background: "#f0f0f0", marginBottom: "1rem" }}
     >
       <div className="container-fluid">
-        <a className="navbar-brand" href="#">
+        <Link className="navbar-brand" to="/">
           My App
-        </a>
+        </Link>
         <div className="collapse navbar-collapse" id="navbarNav">
           <ul className="navbar-nav">
             <li className="nav-item">

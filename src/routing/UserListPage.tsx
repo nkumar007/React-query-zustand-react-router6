@@ -1,4 +1,5 @@
-import { Link } from "react-router-dom";
+import { Link, Navigate, Outlet } from "react-router-dom";
+import useAuth from "./hooks/useAuth";
 
 const UserListPage = () => {
   const users = [
@@ -6,15 +7,18 @@ const UserListPage = () => {
     { id: 2, name: "John" },
     { id: 3, name: "Alice" },
   ];
+
   return (
-    <ul className="list-group">
-      {users.map((user) => (
-        <li className="list-group-item" key={user.id}>
-          <Link to={`/users/${user.id}`}>{user.name}</Link>
-          {/* <a href="#">{user.name}</a> */}
-        </li>
-      ))}
-    </ul>
+    <div style={{ display: "flex", justifyContent: "flex-start" }}>
+      <ul className="list-group" style={{ width: "50%", marginRight: "10px" }}>
+        {users.map((user) => (
+          <li className="list-group-item" key={user.id}>
+            <Link to={`/users/${user.id}`}>{user.name}</Link>
+          </li>
+        ))}
+      </ul>
+      <Outlet />
+    </div>
   );
 };
 
